@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>下拉式選單製作</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+  <style>
+    /* 設成還原值 */
+
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    #menu {
+      margin: auto;
+    }
+
+    .main {
+      background-color: rgb(66, 167, 167);
+      color: white;
+      font-family: 微軟正黑體;
+      font-weight: bold;
+      font-size: 20px;
+      cursor: pointer;
+      text-align: center;
+      height: 35px;
+      line-height: 35px;
+      width: 100px;
+    }
+
+    .main:hover {
+      background-color: #4d4949;
+    }
+
+    .sub {
+      cursor: pointer;
+      background-color: #4d4949;
+      color: white;
+      font-family: 微軟正黑體;
+      text-align: center;
+      font-weight: bold;
+      width: 100px;
+    }
+
+    .sub li {
+      list-style-type: none;
+      line-height: 25px;
+    }
+
+    .item {
+      float: left;
+    }
+  </style>
+
+  <script>
+    $(document).ready(function () {
+
+      var oldtext = ['關於', '日期', '價格', '幫助', '贊助']
+      var newtext = ['About', 'Dates', 'Price', 'Help', 'donate']
+      $(".sub").slideUp(0)
+      for (i = 0; i < $(".main").length; i++) {
+        $(".main:eq(" + i + ")").mouseover({
+          id: i
+        }, function (e) {
+          n = e.data.id
+          $(".main:eq(" + n + ")").text(newtext[n])
+          $(".sub:eq(" + n + ")").slideToggle()
+          $(".sub:not(:eq(" + n + "))").slideUp()
+        })
+        $(".main").mouseout({
+          id: i
+        }, function (e) {
+          n = e.data.id
+          // $(".sub").slideUp(200)
+          $(".main:eq(" + n + ")").text(oldtext[n])
+        })
+      }
+      $("#menu").css("width", $(".main").length * 100)
+    })
+  </script>
+
+</head>
+
+
+
+
+<body>
+  <div id="menu">
+    <!-- 第一組清單   -->
+    <div class="item">
+      <div class="main">總覽</div>
+      <div class="sub">
+        <ul>
+          <li>今日最新</li>
+          <li>熱門排行</li>
+          <li>特別企劃</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 第二組清單   -->
+    <div class="item">
+      <div class="main">確認時間</div>
+      <div class="sub"></div>
+    </div>
+
+    <!-- 第三組清單   -->
+    <div class="item">
+      <div class="main">價格</div>
+      <div class="sub">
+        <ul>
+          <li>單人房</li>
+          <li>雙人房</li>
+          <li>頂級套房</li>
+          <li>帝寶套房</li>
+          <li>總統套房</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 第四組清單   -->
+    <div class="item">
+      <div class="main">幫助</div>
+      <div class="sub">
+        <ul>
+          <li>如何操作</li>
+          <li>找地圖</li>
+          <li>刷卡服務</li>
+          <li>如何預定</li>
+          <li>導覽</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 第五組清單   -->
+    <div class="item">
+      <div class="main">贊助</div>
+      <div class="sub">
+        <ul>
+          <li>美金一塊</li>
+          <li>星巴克拿鐵</li>
+          <li>一億美金</li>
+          <li>一塊台幣</li>
+          <li>三十九元</li>
+        </ul>
+      </div>
+    </div>
+</body>
+
+
+
+
+
+</html>
