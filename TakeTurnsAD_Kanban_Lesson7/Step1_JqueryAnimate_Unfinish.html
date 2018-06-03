@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>New Jerusalem's SHOP</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src='jquery.color-2.1.2.min.js'></script>
+  <script>
+    $(document).ready(function () {
+      $(".show").animate({
+        "width": "300px",
+        "height": "300px",
+        "left": "100px",
+        "top": "100px"
+      })
+    })
+  </script>
+
+  <style>
+    .show {
+      height: 100px;
+      width: 100px;
+      border-radius: 10px;
+      background-color: aquamarine;
+      position: absolute;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="show">
+
+  </div>
+
+
+</body>
+
+</html>
+
+
+<!--
+  第一步：建造 show div　＆　CSS 刻劃出版型
+  
+         使用 JQuery animate這個效果，animate({"CSS屬性"："CSS的值"})
+         這麼做的話，就可以改變方框的大小了，我們同樣也可以改變方框的位置 position:absolute;
+ 知道animate的大致用法後，我們就來模仿製作yahoo的廣告輪撥畫面了 Step2 輪播式廣告banner版面建置
+-->
+
+
