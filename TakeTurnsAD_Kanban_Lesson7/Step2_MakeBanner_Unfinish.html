@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>輪播式廣告banner製作</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src='jquery.color-2.1.2.min.js'></script>
+  <script>
+    $(document).ready(function () {
+      $(".show").animate({
+        "width": "300px",
+        "height": "300px",
+        "left": "100px",
+        "top": "100px"
+      })
+    })
+  </script>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    #all {
+      width: 949px;
+      height: 424px;
+
+      /* 置中 */
+      margin: auto;
+
+      /* 如果其他區塊超過all的寬度時，隱藏起來。 */
+      overflow: hidden
+    }
+
+    .nav {
+      width: 949px;
+      height: 40px;
+      margin-bottom: 10px;
+      margin-top: 20px;
+      border-bottom: 1px solid #07A1D4;
+      padding-bottom: 3px
+    }
+
+    .nav li {
+      float: left;
+      list-style-type: none;
+      color: darkgray;
+      font-family: 微軟正黑體;
+      width: 200px;
+      font-size: 18px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer
+    }
+
+    .nav li:hover {
+      font-weight: bold;
+      color: #0785d4;
+      font-size: 21px;
+      border-bottom: 4px solid #07A1D4;
+    }
+
+    .banner {
+      width: 2847px;
+      height: 354px;
+    }
+
+    .banner img {
+      float: left
+    }
+  </style>
+</head>
+
+<body>
+  <div id="all">
+    <div class="nav">
+      <ul>
+        <li>生活雜貨</li>
+        <li>美妝保養</li>
+        <li>五金用品</li>
+      </ul>
+    </div>
+    <div class="banner">
+      <img src="img/banner2.jpg" alt="yahoopicture">
+      <img src="img/banner1.jpg" alt="yahoopicture">
+      <img src="img/banner3.jpg" alt="yahoopicture">
+    </div>
+  </div>
+
+</body>
+
+</html>
+
+
+<!--
+ 知道animate的大致用法後，我們就來模仿製作yahoo的廣告輪撥畫面了
+ 
+ 第二步：版面建置
+        我們先分析yahoo廣告的版型，可以看出大概可以切成兩個區塊，
+        一個區塊是是上方的選單（nav），另一個區塊是下方的廣告區（banner）
+
+        第三步驟我們會在 Step3 分享，用意是透過【拆解步驟】更了解如何完成一個功能。
+-->
