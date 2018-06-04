@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>製作輪撥式廣告看板</title>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    #all {
+      width: 949px;
+      height: 424px;
+
+      /* 置中 */
+      margin: auto;
+
+      /* 如果其他區塊超過all的寬度時，隱藏起來。 */
+      overflow: hidden
+    }
+
+    .nav {
+      width: 949px;
+      height: 40px;
+      margin-bottom: 10px;
+      margin-top: 20px;
+      border-bottom: 1px solid #07A1D4;
+      padding-bottom: 3px
+    }
+
+    .nav li {
+      float: left;
+      list-style-type: none;
+      color: darkgray;
+      font-family: 微軟正黑體;
+      width: 200px;
+      font-size: 18px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer
+    }
+
+    /*
+      接著，我們可以把剛剛寫的.nav li:hover {}這整段CSS刪掉，讓它變成jQuery動畫的效果，這段效果分成兩段，
+      下面那段的意思是，當我滑鼠移到的那欄，請幫我改變字體；上面那段則是用來恢復每一段變回原本的字體。
+    */
+
+    /* .nav li:hover {
+          font-weight: bold;
+          color: #0785d4;
+          font-size: 21px;
+          border-bottom: 4px solid #07A1D4;
+      } 
+    */
+
+    .banner {
+
+      /*
+      為了避免以後圖片增加，我們要去修改banner這個區塊的寬度，我們就直接把style裡面banner的寬度拿掉，
+      把它放到jQuery裡面，讓電腦自動根據我有幾張圖片（num_li）來決定banner的寬度（width_banner）
+      width: 2847px; 
+      */
+      height: 354px;
+
+      /* 寫移動的效果時，會用到animate這個語法，但要注意的是，若要用animate，前面一定要先定義position。
+         如果用absolute，banner會出現問題，上面雖然我們有設定overflow:hidden，當是當我這裡的postion如果設定成absolute，它會以它上層的element（這裡就是指id=all）當作定位點。 
+      */
+      position: relative;
+    }
+
+    .banner img {
+      float: left
+    }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src='jquery.color-2.1.2.min.js'></script>
+  <script>
+    /* 以下這段程式碼的意思是，當我的滑鼠進入（mouseenter）nav li這個區塊時，執行animate的動畫。這裡的定位點是用relative，當left為0的時候，就是最左邊，當left為-949的時候，表示圖片會往左邊移動949px，以此類推。
+     */
+    $(document).ready(function () {
+
+      time = 3000 //設定輪撥速度。把它設成變數time，後面所有原本填3000的地方，都改成time就可以
+      img_width = 949 //設定圖片寬度
+      num_li = $(".nav li").length //根據有幾個標題來寫迴圈
+      width_banner = num_li * img_width　 //我們在上面新設一個變數 img_width = 949，是圖片寬度，這樣以後如果我們廣告圖片的寬度有改變的話，只需要調整這裡就可以了，我們把這個變數取做img_width，後面原本寫949的地方也全部要取代成img_width。
+      $(".banner").css("width", width_banner) //根據有幾個標題來設定banner的寬度
+
+      //當滑鼠移過時，圖片移動到特定位置，把圖片的數目做成變數 num_li 這樣如果圖片增加也不用一個個去改，會自動判斷我們有幾張圖
+      for (let i = 0; i < num_li; i++) {
+        $(".nav li:eq(" + i + ")").mouseenter({
+          id: i
+        }, function (e) {
+          n = e.data.id
+          change()
+        })
+      }
+
+      /*設定輪播函數＿製作自動輪撥的效果
+      接著要利用setInterval（函數，時間），這個語法，也就是每隔多久執行一次該函數（這裡是auto）。*/
+      clock = setInterval(auto, time);
+      n = 0;
+
+      function auto() {
+        n++
+        if (n >= num_li) {
+          n = 0
+        }
+        position = -n * img_width
+        $(".banner").animate({
+          "left": +position + "px"
+        }, 400)
+
+        //把不是輪播到畫面的字體改回原狀
+        $(".nav li").css({
+          "font-weight": "none",
+          "color": "darkgray",
+          "font-size": "16px",
+          "border-bottom": "none",
+        })
+
+        //讓字體根據輪播到的畫面改變
+        $(".nav li:eq(" + n + ")").css({
+          "font-weight": "bold",
+          "color": "#0785d4",
+          "font-size": "19px",
+          "border-bottom": " 4px solid #07A1D4",
+        })
+      }
+      //當滑鼠移到圖案上時輪撥暫停
+      $(".banner img").hover(function () {
+        clearInterval(clock)
+      }, function () {
+        clock = setInterval(auto, time)
+      })
+
+
+      //當滑鼠移到nav時，根據標題移動圖片
+      function change() {
+        clearInterval(clock)
+        clock = setInterval(auto, time)
+        position2 = -n * img_width
+        $(".banner").stop() //讓動畫不會像音譜一樣抖動，當其他動畫開始執行時，原本已開始的動畫就停止
+        $(".banner").animate({
+          "left": +position2 + "px"
+        }, 400)
+        //讓所以的清單變回原本的字體
+        $(".nav li").css({
+          "font-weight": "none",
+          "color": "darkgray",
+          "font-size": "16px",
+          "border-bottom": "none",
+        })
+        //讓滑鼠移到的清單改變成hover的字體
+        $(".nav li:eq(" + n + ")").css({
+          "font-weight": "bold",
+          "color": "#0785d4",
+          "font-size": "19px",
+          "border-bottom": " 4px solid #07A1D4",
+        })
+      }
+    })
+  </script>
+
+
+</head>
+
+<body>
+  <div id="all">
+    <div class="nav">
+      <ul>
+        <!-- 讓網頁一進去第一個標題就是 hover 效果 -->
+        <li style="font-weight:bold; color:#0785d4;font-size:21px;border-bottom:4px solid #07A1D4">生活雜貨</li>
+        <!-- <li>生活雜貨</li> -->
+        <li>美妝保養</li>
+        <li>五金用品</li>
+      </ul>
+    </div>
+    <div class="banner">
+      <img src="img/banner2.jpg" alt="yahoopicture">
+      <img src="img/banner1.jpg" alt="yahoopicture">
+      <img src="img/banner3.jpg" alt="yahoopicture">
+      <img src="img/banner4.jpg" alt="yahoopicture">
+      <img src="img/banner5.jpg" alt="yahoopicture">
+      <img src="img/banner6.jpg" alt="yahoopicture">
+      <img src="img/banner7.jpg" alt="yahoopicture">
+    </div>
+  </div>
+
+</body>
+
+</html>
+
+
+<!--
+ 知道animate的大致用法後，我們就來模仿製作yahoo的廣告輪撥畫面了
+ 
+ 第二步：版面建置
+        我們先分析yahoo廣告的版型，可以看出大概可以切成兩個區塊，
+        一個區塊是是上方的選單（nav），另一個區塊是下方的廣告區（banner）
+
+        第三步驟我們會在 Step3 分享，用意是透過【拆解步驟】更了解如何完成一個功能。
+
+        下一步：讓字體根據游標位置改變
+-->
