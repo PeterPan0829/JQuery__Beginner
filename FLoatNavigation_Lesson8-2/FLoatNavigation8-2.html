@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>單頁輪撥式網站設計 - 2</title>
+
+  <!--    匯入jQuery    -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="jquery.mousewheel.min.js"></script>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    /*插入導覽列*/
+
+    .nav {
+      position: fixed;
+      top: 50%;
+      right: 0;
+    }
+
+    .nav ul li {
+      list-style: none;
+      width: 10px;
+      height: 10px;
+      margin: 10px;
+      background-color: #fff;
+      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5) inset;
+      cursor: pointer;
+    }
+
+    .nav ul .active {
+      background-color: #43A55F;
+    }
+
+    /*每頁顯示的圖片*/
+
+    .p01 {
+      /* background-image: url("img/shape_square-1.png"); */
+      background-image: url(/img/shape_square-1);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p02 {
+      background-image: url(/img/shape_square-2);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p03 {
+      background-image: url(/img/shape_square-3);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p04 {
+      background-image: url(/img/shape_square-4);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p05 {
+      background-image: url(/img/shape_square-5);
+      background-size: cover;
+      height: 100vh;
+    }
+  </style>
+  <script>
+    $(document).ready(function () {
+
+      var num_li = $(".nav li").length;
+
+      var n = 1;
+      var moving = 0;
+
+      // 讓它根據我們的n跳到指定的頁面
+      $(window).mousewheel(function (e) {
+        $("html, body").stop();
+        if (moving == 0) {
+          moving = 1;
+          if (e.deltaY == -1) {
+            if (n < num_li) {
+              n++;
+            }
+          } else {
+            if (n > 1) {
+              n--;
+            }
+          }
+        }
+        console.log(n);
+        $("html, body").animate({
+          "scrollTop": $(".p0" + n).offset().top
+        }, function () {
+          moving = 0;
+        })
+      })
+
+      //  點選右方導覽列時會到指定圖片
+      for (var i = 0; i <= num_li; i++) {
+        $(".nav li:eq(" + i + ")").click({
+          id: i
+        }, function (e) {
+          $(".nav li").css("background-color", "#FFF");
+          var page = e.data.id + 1;
+          $("html,body").animate({
+            "scrollTop": $(".p0" + page).offset().top
+          })
+          $(this).css("background-color", "#43a55f");
+          n = e.data.id + 1
+        })
+      }
+
+      //  一進入網頁時，將導覽列垂直置中
+      center();
+
+      //  縮放網頁時，重新將導覽列置中
+      $(window).resize(function () {
+        center();
+      })
+
+      //  計算導覽列垂直置中的高度
+      function center() {
+        var pos = $(window).height() / 2 - $(".nav").height() / 2;
+        $(".nav").css("top", pos);
+      }
+
+      $(window).scroll(function () {
+        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() < $(".p02").offset().top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+          $(".nav li:eq(0)").css("background-color", "#46dd46")
+        } else if ($(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() < $(".p03").offset()
+          .top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+          $(".nav li:eq(1)").css("background-color", "#46dd46")
+        } else if ($(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() < $(".p04").offset()
+          .top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+          $(".nav li:eq(2)").css("background-color", "#46dd46")
+        } else if ($(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() < $(".p05").offset()
+          .top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+          $(".nav li:eq(3)").css("background-color", "#46dd46")
+        } else if ($(window).scrollTop() >= $(".p05").offset().top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+          $(".nav li:eq(4)").css("background-color", "#46dd46")
+        }
+      })
+    })
+  </script>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <ul>
+        <li class="active" style="background-color:#46dd46"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="p01"></div>
+    <div class="p02"></div>
+    <div class="p03"></div>
+    <div class="p04"></div>
+    <div class="p05"></div>
+  </div>
+</body>
+
+</html>
