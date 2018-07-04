@@ -20,7 +20,39 @@
       margin: 0;
     }
 
-    /*每頁顯示的圖片*/
+    /* 插入導覽列 */
+
+    /* 在nav這個class中，我把位置設成fixed，位置則是設在右方，
+    高度大約50%的地方（這樣做雖然可以隨著螢幕縮放而改變nav的位置，但是它並不是真的垂直置中，後面會在說明垂直置中的方式）。 */
+
+    .nav {
+      position: fixed;
+      top: 50%;
+      right: 0px;
+    }
+
+    /* 在li這個標籤中，希望設定一個高和寬為10px的圓點，要變成圓點我們只需要使用border-radius這個指令就可以了，
+    當border-radius的大小超過長和寬的一半時，它就變變成圓形。box-shadow這個指令則是用來製造陰影的，
+    因為我希望的我圓點更有立體感。list-style-type:none則是希望把原本ul標籤會有的標點拿掉。 */
+
+    .nav ul li {
+      width: 10px;
+      height: 10px;
+      margin: 10px;
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0, 5) inset, -1px -1px 1px rgba(0, 0, 0, 0, 5) inset;
+      list-style-type: none;
+      cursor: pointer;
+    }
+
+    .nav ul .active {
+      background-color: #43A55F;
+    }
+
+
+
+    /*pxx 為每頁顯示的圖片*/
 
     .p01 {
       background-image: url(img/p01.jpg);
@@ -51,56 +83,30 @@
       background-size: cover;
       height: 100vh;
     }
-
-
-    /* 插入導覽列 */
-
-    /* 在nav這個class中，我把位置設成fixed，位置則是設在右方，
-    高度大約50%的地方（這樣做雖然可以隨著螢幕縮放而改變nav的位置，但是它並不是真的垂直置中，後面會在說明垂直置中的方式）。 */
-
-    .nav {
-      position: fixed;
-      top: 50%;
-      right: 0px;
-    }
-
-    /* 在li這個標籤中，希望設定一個高和寬為10px的圓點，要變成圓點我們只需要使用border-radius這個指令就可以了，
-    當border-radius的大小超過長和寬的一半時，它就變變成圓形。box-shadow這個指令則是用來製造陰影的，
-    因為我希望的我圓點更有立體感。list-style-type:none則是希望把原本ul標籤會有的標點拿掉。 */
-
-    li {
-      width: 10px;
-      height: 10px;
-      margin: 10px;
-      background-color: white;
-      border-radius: 5px;
-      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0, 5) inset, -1px -1px 1px rgba(0, 0, 0, 0, 5) inset;
-      list-style-type: none;
-
-    }
   </style>
 </head>
 
 <body>
 
   <!--
-把圖片放入網頁中，我的想法是利用背景圖片的方式來呈現這些圖片，
-而且我希望每一張圖片呈現的大小都會隨著瀏覽器的高度而變，占滿整個頁面，所以我把它分成5個區塊，分別取不同的class。
- -->
+    把圖片放入網頁中，我的想法是利用背景圖片的方式來呈現這些圖片，
+    而且我希望每一張圖片呈現的大小都會隨著瀏覽器的高度而變，占滿整個頁面，所以我把它分成5個區塊，分別取不同的class。
+  -->
 
   <div class="container">
-    <!-- 加上導覽標籤導覽標籤的用意就是讓網友知道現在是在第幾頁，一般來說用個圓點就可以了。
-    寫法如下：我利用表單標籤<ul></ul>來建立表單，因為我們有5張圖，所以一共會有5組的標籤。
-    接下來，我想直接用CSS的方法來建立標籤（圓點）-->
+    <!--
+      加上導覽標籤的用意就是讓網友知道現在是在第幾頁，一般來說用個圓點就可以了。
+      寫法如下：我利用表單標籤<ul></ul>來建立表單，因為我們有5張圖，所以一共會有5組的標籤。
+      接下來，我想直接用CSS的方法來建立標籤（圓點）
+    -->
     <div class="nav">
       <ul>
-        <li style="background-color: #46dd46"></li>
+        <li class="active"></li>
         <li></li>
         <li></li>
         <li></li>
         <li></li>
       </ul>
-
     </div>
     <div class="p01"></div>
     <div class="p02"></div>
@@ -109,80 +115,58 @@
     <div class="p05"></div>
   </div>
 
-  <!-- 透過jQuery讓導覽列垂直置中
-    之前在部落格整理的CSS垂直置中的方法這篇文章中，已經說明了許多不同的垂直置中方法，
-    這裡因為我們的position是設定成fixed的關係，所以並不適合使用margin+position或inline-block這些方法。
-    那我們到底該怎麼辦呢？這時候只好用jQuery來解決這個問題了！ -->
+  <!--
+    透過jQuery讓導覽列垂直置中
+    之前整理CSS垂直置中的方法已經說明了許多不同的垂直置中方法，
+    這裡因為我們的position是設定成fixed的關係，所以並不適合使用 margin+position 或 inline-block 這些方法。
+    那我們到底該怎麼辦呢？這時候只好用jQuery來解決這個問題了！
+  -->
   <script>
     $(document).ready(function () {
 
-      $(".nav li:eq(0)").click(function () {
-        $("html,bady").anmate({
-          "scrollTop": $(".p01").offset().top
-        })
-      })
-
-      $(".nav li:eq(1)").click(function () {
-        $("html,bady").anmate({
-          "scrollTop": $(".p02").offset().top
-        })
-      })
-
-      $(".nav li:eq(2)").click(function () {
-        $("html,bady").anmate({
-          "scrollTop": $(".p03").offset().top
-        })
-      })
-
-      // 點選右方導覽列時會到指定圖片
-      let num_li = $("li").length
-      for (let i = 0; i <= num_li; i++) {
+      //  點選右方導覽列時會到指定圖片
+      let num_li = $(".nav li").length;
+      for (var i = 0; i <= num_li; i++) {
         $(".nav li:eq(" + i + ")").click({
           id: i
         }, function (e) {
-          $(".nav li").css("background-color", "white")
-          page = e.data.id + 1
-          $("htmy,body").animate({
+          $(".nav li").css("background-color", "#FFF");
+          var page = e.data.id + 1;
+          $("html,body").animate({
             "scrollTop": $(".p0" + page).offset().top
           })
-
-          $(".nav li:eq(" + e.data.id + ")").css("background-colo", "#46dd46") //前面的selector用this也可以
+          $(this).css("background-color", "#43a55f");
         })
       }
 
-      // 一進入網頁時，將導覽列垂直置中計算導覽列置中的位置
-      center()
+      //  一進入網頁時，將導覽列垂直置中
+      center();
 
-      // 縮放網頁時，將導覽列垂直置中
+      //  縮放網頁時，重新將導覽列置中
       $(window).resize(function () {
-        center()
+        center();
       })
 
-      //計算導覽列垂直置中的高度
+      //  計算導覽列垂直置中的高度
       function center() {
-        let pos = $(window).height() / 2 - $(".nav").height() / 2
-        $(".nav").css("top", pos)
+        var pos = $(window).height() / 2 - $(".nav").height() / 2;
+        $(".nav").css("top", pos);
       }
-
       $(window).scroll(function () {
-        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() <
-          $(".p02").offset().top) {
+        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() < $(".p02").offset().top) {
           $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(0)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() <
-          $(".p03").offset().top) {
-          $(".nav li").css("background-color",
-            "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+        } else if ($(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() < $(".p03").offset()
+          .top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(1)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() <
-          $(".p04").offset().top) {
-          $(".nav li").css("background-color",
-            "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+        } else if ($(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() < $(".p04").offset()
+          .top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(2)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() <
-          $(".p05").offset().top) {
-          $(".nav li").css("background-color",
-            "white") //除了被點擊到的游標，其他都恢復成原來的顏色
+        } else if ($(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() < $(".p05").offset()
+          .top) {
+          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(3)").css("background-color", "#46dd46")
         } else if ($(window).scrollTop() >= $(".p05").offset().top) {
           $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
