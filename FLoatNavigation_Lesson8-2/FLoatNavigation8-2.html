@@ -3,11 +3,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>單頁輪撥式網站設計 - 2</title>
+  <title>單頁輪撥式網站設計2 - mousewheel功能</title>
 
   <!--    匯入jQuery    -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!-- <script src="jquery.mousewheel.js"></script> -->
   <script src="jquery.mousewheel.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
   <style>
     * {
@@ -28,63 +30,110 @@
     }
 
     .nav ul li {
-      list-style: none;
       width: 10px;
       height: 10px;
       margin: 10px;
       background-color: #fff;
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5) inset;
       cursor: pointer;
+      list-style: none;
     }
 
     .nav ul .active {
       background-color: #43A55F;
     }
 
+    h1 {
+      font-size: 60px;
+      color: ghostwhite;
+      text-shadow: 0px 0px 15px black;
+    }
+
+
     /*每頁顯示的圖片*/
 
     .p01 {
-      /* background-image: url("img/shape_square-1.png"); */
-      background-image: url(/img/shape_square-1);
+      background-image: url(img/p01.jpg);
       background-size: cover;
       height: 100vh;
     }
 
     .p02 {
-      background-image: url(/img/shape_square-2);
+      background-image: url(img/p02.jpg);
       background-size: cover;
       height: 100vh;
     }
 
     .p03 {
-      background-image: url(/img/shape_square-3);
+      background-image: url(img/p03.jpg);
       background-size: cover;
       height: 100vh;
     }
 
     .p04 {
-      background-image: url(/img/shape_square-4);
+      background-image: url(img/p04.jpg);
       background-size: cover;
       height: 100vh;
     }
 
     .p05 {
-      background-image: url(/img/shape_square-5);
+      background-image: url(img/p05.jpg);
       background-size: cover;
       height: 100vh;
     }
   </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <ul>
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="p01">
+      <h1>Page 1</h1>
+    </div>
+    <div class="p02">
+      <h1>Page 2</h1>
+    </div>
+    <div class="p03">
+      <h1>Page 3</h1>
+    </div>
+    <div class="p04">
+      <h1>Page 4</h1>
+    </div>
+    <div class="p05">
+      <h1>Page 5</h1>
+    </div>
+  </div>
+
   <script>
     $(document).ready(function () {
 
+      // 偵測我們有幾個標點（圖片）
       var num_li = $(".nav li").length;
 
       var n = 1;
       var moving = 0;
 
+      // $('img').on('scroll', function (e) {
+      //   e.preventDefault(); // do some stuff });
+
+
+      // $(window).mousewheel(function (e) {
       // 讓它根據我們的n跳到指定的頁面
-      $(window).mousewheel(function (e) {
+      $('img').on('scroll', function (e) {
+        e.preventDefault();
         $("html, body").stop();
+
+        // 讓滑鼠滾輪滑一次只換一頁
+        // 新增一個變數叫做moving當moving等於0時，n才會增加或減少（滾動才有效果），當moving等於1時，怎麼滾n都不會改變（滾動沒有效果）。
+
         if (moving == 0) {
           moving = 1;
           if (e.deltaY == -1) {
@@ -97,6 +146,7 @@
             }
           }
         }
+
         console.log(n);
         $("html, body").animate({
           "scrollTop": $(".p0" + n).offset().top
@@ -134,20 +184,22 @@
         $(".nav").css("top", pos);
       }
 
+      //根據捲軸的位置改變右方導覽列游標的顏色
       $(window).scroll(function () {
-        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() < $(".p02").offset().top) {
+        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() <
+          $(".p02").offset().top) {
           $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(0)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() < $(".p03").offset()
-          .top) {
+        } else if ($(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() <
+          $(".p03").offset().top) {
           $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(1)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() < $(".p04").offset()
-          .top) {
+        } else if ($(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() <
+          $(".p04").offset().top) {
           $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(2)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() < $(".p05").offset()
-          .top) {
+        } else if ($(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() <
+          $(".p05").offset().top) {
           $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
           $(".nav li:eq(3)").css("background-color", "#46dd46")
         } else if ($(window).scrollTop() >= $(".p05").offset().top) {
@@ -157,26 +209,6 @@
       })
     })
   </script>
-
-</head>
-
-<body>
-  <div class="container">
-    <div class="nav">
-      <ul>
-        <li class="active" style="background-color:#46dd46"></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
-    </div>
-    <div class="p01"></div>
-    <div class="p02"></div>
-    <div class="p03"></div>
-    <div class="p04"></div>
-    <div class="p05"></div>
-  </div>
 </body>
 
 </html>
