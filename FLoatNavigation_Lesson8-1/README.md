@@ -1,13 +1,13 @@
 # This file use these method.
 
-**CSS**
+### CSS
 border-radius：邊框變弧形，可用來製作圓形。
 
 box-shadow：製作邊框的陰影效果。
 
 scrollTop：從頁面最上方到某捲軸位置的距離。
 
-**jQuery**
+### jQuery
 $( ).css({"標籤" :"值","標籤" :"值"})：針對某個標籤（包含class、id）修改css樣式。
 
 $( ).height( )：擷取某個屬性的高度。
