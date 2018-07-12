@@ -10,6 +10,9 @@
   <script src="jquery.mousewheel.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.js"></script> -->
+
 
   <style>
     * {
@@ -30,17 +33,25 @@
     }
 
     .nav ul li {
-      width: 10px;
+      /* width: 10px;
       height: 10px;
       margin: 10px;
       background-color: #fff;
       box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5) inset;
       cursor: pointer;
+      list-style: none; */
+      width: 10px;
+      height: 10px;
+      margin: 10px;
+      background-color: #fff;
+      box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.5) inset;
+      cursor: pointer;
+      border-radius: 50%;
       list-style: none;
     }
 
     .nav ul .active {
-      background-color: #43A55F;
+      background-color: darkcyan;
     }
 
     h1 {
@@ -112,71 +123,65 @@
     </div>
   </div>
 
+  <!-- <button id="btn">button</button> -->
+
   <script>
     $(document).ready(function () {
+      // 重新載入此頁面時，回到第一張圖，並將右方導覽列置中
+      $('body, html').scrollTop(0);
+      center();
 
-      // 偵測我們有幾個標點（圖片）
-      var num_li = $(".nav li").length;
+      let numberOfListItem = $(".nav li").length;
+      let currentItem = 1;
+      let isMoving = 0;
 
-      var n = 1;
-      var moving = 0;
+      // 滑鼠滾輪捲動時，移動圖片
+      $(window).mousewheel(debounce(e => scrollToCurrentItem(e), 100, true));
 
-      // $('img').on('scroll', function (e) {
-      //   e.preventDefault(); // do some stuff });
-
-
-      // $(window).mousewheel(function (e) {
-      // 讓它根據我們的n跳到指定的頁面
-      $('img').on('scroll', function (e) {
-        e.preventDefault();
-        $("html, body").stop();
-
-        // 讓滑鼠滾輪滑一次只換一頁
-        // 新增一個變數叫做moving當moving等於0時，n才會增加或減少（滾動才有效果），當moving等於1時，怎麼滾n都不會改變（滾動沒有效果）。
-
-        if (moving == 0) {
-          moving = 1;
-          if (e.deltaY == -1) {
-            if (n < num_li) {
-              n++;
+      function scrollToCurrentItem(e) {
+        if (isMoving === 0) {
+          isMoving = 1;
+          if (e.deltaY < 0) {
+            if (currentItem < numberOfListItem) {
+              currentItem++;
             }
           } else {
-            if (n > 1) {
-              n--;
+            if (currentItem > 1) {
+              currentItem--;
             }
           }
         }
 
-        console.log(n);
-        $("html, body").animate({
-          "scrollTop": $(".p0" + n).offset().top
-        }, function () {
-          moving = 0;
-        })
-      })
-
-      //  點選右方導覽列時會到指定圖片
-      for (var i = 0; i <= num_li; i++) {
-        $(".nav li:eq(" + i + ")").click({
-          id: i
-        }, function (e) {
-          $(".nav li").css("background-color", "#FFF");
-          var page = e.data.id + 1;
-          $("html,body").animate({
-            "scrollTop": $(".p0" + page).offset().top
-          })
-          $(this).css("background-color", "#43a55f");
-          n = e.data.id + 1
-        })
+        $("html, body").stop().animate({
+            scrollTop: $(".p0" + currentItem).offset().top
+          },
+          function () {
+            isMoving = 0;
+          }
+        );
       }
 
-      //  一進入網頁時，將導覽列垂直置中
-      center();
+      //  點選右方導覽列時會到指定圖片
+      for (var i = 0; i <= numberOfListItem; i++) {
+        $(".nav li:eq(" + i + ")").click({
+            id: i
+          },
+          function (e) {
+            $(".nav li").removeClass('active');
+            var page = e.data.id + 1;
+            $("html,body").animate({
+              scrollTop: $(".p0" + page).offset().top
+            });
+            $(this).addClass('active');
+            currentItem = e.data.id + 1;
+          }
+        );
+      }
 
       //  縮放網頁時，重新將導覽列置中
       $(window).resize(function () {
         center();
-      })
+      });
 
       //  計算導覽列垂直置中的高度
       function center() {
@@ -184,30 +189,58 @@
         $(".nav").css("top", pos);
       }
 
-      //根據捲軸的位置改變右方導覽列游標的顏色
+      // 監控 window scroll 事件，用來改變右方導覽列 active 游標的顏色
       $(window).scroll(function () {
-        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() <
-          $(".p02").offset().top) {
-          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
-          $(".nav li:eq(0)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() <
-          $(".p03").offset().top) {
-          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
-          $(".nav li:eq(1)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() <
-          $(".p04").offset().top) {
-          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
-          $(".nav li:eq(2)").css("background-color", "#46dd46")
-        } else if ($(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() <
-          $(".p05").offset().top) {
-          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
-          $(".nav li:eq(3)").css("background-color", "#46dd46")
+        console.log('scroll', $(window).scrollTop());
+        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() < $(".p02").offset().top) {
+          //除了被點擊到的游標，其他都恢復成原來的顏色
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(0)').addClass('active');
+        } else if (
+          $(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() < $(".p03").offset().top
+        ) {
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(1)').addClass('active');
+        } else if (
+          $(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() < $(".p04").offset().top
+        ) {
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(2)').addClass('active');
+        } else if (
+          $(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() < $(".p05").offset().top
+        ) {
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(3)').addClass('active');
         } else if ($(window).scrollTop() >= $(".p05").offset().top) {
-          $(".nav li").css("background-color", "white") //除了被點擊到的游標，其他都恢復成原來的顏色
-          $(".nav li:eq(4)").css("background-color", "#46dd46")
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(4)').addClass('active');
         }
-      })
-    })
+      });
+    });
+
+
+    /**
+     * 將要 debounce 的函式代入 func 中，不用 invoke
+     * wait 設定時間（毫秒）
+     * immeditate 如果是 true 則在事件觸發時會立即執行，
+     * 但事件結束時不會執行；如果是 false 則事件觸發時不會立即執行，
+     * 但事件結束時會執行。
+     **/
+    function debounce(func, wait, immediate) {
+      var timeout;
+      return function () {
+        var context = this,
+          args = arguments;
+        var later = function () {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+      };
+    }
   </script>
 </body>
 
