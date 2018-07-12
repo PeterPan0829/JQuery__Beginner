@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>單頁輪撥式網站設計3 - 製作回到網頁頂端按鈕</title>
+  <!--    匯入FontAwesome   -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <!--    匯入jQuery    -->
+  <script src="jquery.mousewheel.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    /*插入導覽列*/
+
+    .nav {
+      position: fixed;
+      top: 50%;
+      right: 0;
+    }
+
+    .nav ul li {
+      width: 10px;
+      height: 10px;
+      margin: 10px;
+      background-color: #fff;
+      box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.5) inset;
+      cursor: pointer;
+      border-radius: 50%;
+      list-style: none;
+    }
+
+    .nav ul .active {
+      background-color: darkcyan;
+    }
+
+    h1 {
+      font-size: 60px;
+      color: ghostwhite;
+      text-shadow: 0px 0px 15px black;
+    }
+
+    /*每頁顯示的圖片*/
+
+    .p01 {
+      background-image: url(img/p01.jpg);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p02 {
+      background-image: url(img/p02.jpg);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p03 {
+      background-image: url(img/p03.jpg);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p04 {
+      background-image: url(img/p04.jpg);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    .p05 {
+      background-image: url(img/p05.jpg);
+      background-size: cover;
+      height: 100vh;
+    }
+
+    /* 幫向上按鈕透過CSS的方式改變成想要的顏色並且放到想要的位置，
+    這裡用position: fixed是因為我們希望該圖片會一直固定在瀏覽器的右下角，
+    cursor:pointer，則是當網友把滑鼠移到這個圖片的時候，它會呈現出像是「手指」可以點擊這樣的符號。
+   */
+
+    .gotop {
+      color: rgba(213, 243, 115, 0.9);
+      position: fixed;
+      bottom: 2vh;
+      right: 5vh;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <ul>
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="p01">
+      <h1>Page 1</h1>
+    </div>
+    <div class="p02">
+      <h1>Page 2</h1>
+    </div>
+    <div class="p03">
+      <h1>Page 3</h1>
+    </div>
+    <div class="p04">
+      <h1>Page 4</h1>
+    </div>
+    <div class="p05">
+      <h1>Page 5</h1>
+    </div>
+  </div>
+
+  <!-- 新增一個class為「gotop」的區塊，嵌入Font Awesome的圖片-->
+  <div class="gotop">
+    <i class="fa fa-arrow-circle-up fa-2x"></i>
+    <!-- <i class="fa fa-arrow-circle-up fa-2x"></i> -->
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      // 重新載入此頁面時，回到第一張圖，並將右方導覽列置中
+      $('body, html').scrollTop(0);
+      center();
+      let numberOfListItem = $(".nav li").length;
+      let currentItem = 1;
+      let isMoving = 0;
+      // 滑鼠滾輪捲動時，移動圖片
+      $(window).mousewheel(debounce(e => scrollToCurrentItem(e), 100, true));
+
+      function scrollToCurrentItem(e) {
+        if (isMoving === 0) {
+          isMoving = 1;
+          if (e.deltaY < 0) {
+            if (currentItem < numberOfListItem) {
+              currentItem++;
+            }
+          } else {
+            if (currentItem > 1) {
+              currentItem--;
+            }
+          }
+        }
+        $("html, body").stop().animate({
+            scrollTop: $(".p0" + currentItem).offset().top
+          },
+          function () {
+            isMoving = 0;
+          }
+        );
+      }
+      //  點選右方導覽列時會到指定圖片
+      for (var i = 0; i <= numberOfListItem; i++) {
+        $(".nav li:eq(" + i + ")").click({
+            id: i
+          },
+          function (e) {
+            $(".nav li").removeClass('active');
+            var page = e.data.id + 1;
+            $("html,body").animate({
+              scrollTop: $(".p0" + page).offset().top
+            });
+            $(this).addClass('active');
+            currentItem = e.data.id + 1;
+          }
+        );
+      }
+      //  縮放網頁時，重新將導覽列置中
+      $(window).resize(function () {
+        center();
+      });
+      //  計算導覽列垂直置中的高度
+      function center() {
+        var pos = $(window).height() / 2 - $(".nav").height() / 2;
+        $(".nav").css("top", pos);
+      }
+      // 監控 window scroll 事件，用來改變右方導覽列 active 游標的顏色
+      $(window).scroll(function () {
+        console.log('scroll', $(window).scrollTop());
+        if ($(window).scrollTop() >= $(".p01").offset().top && $(window).scrollTop() < $(".p02").offset().top) {
+          //除了被點擊到的游標，其他都恢復成原來的顏色
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(0)').addClass('active');
+        } else if (
+          $(window).scrollTop() >= $(".p02").offset().top && $(window).scrollTop() < $(".p03").offset().top
+        ) {
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(1)').addClass('active');
+        } else if (
+          $(window).scrollTop() >= $(".p03").offset().top && $(window).scrollTop() < $(".p04").offset().top
+        ) {
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(2)').addClass('active');
+        } else if (
+          $(window).scrollTop() >= $(".p04").offset().top && $(window).scrollTop() < $(".p05").offset().top
+        ) {
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(3)').addClass('active');
+        } else if ($(window).scrollTop() >= $(".p05").offset().top) {
+          $('.nav li').removeClass('active');
+          $('.nav li:eq(4)').addClass('active');
+        }
+      });
+
+      /**
+       * 將要 debounce 的函式代入 func 中，不用 invoke
+       * wait 設定時間（毫秒）
+       * immeditate 如果是 true 則在事件觸發時會立即執行，
+       * 但事件結束時不會執行；如果是 false 則事件觸發時不會立即執行，
+       * 但事件結束時會執行。
+       **/
+      function debounce(func, wait, immediate) {
+        var timeout;
+        return function () {
+          var context = this,
+            args = arguments;
+          var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+          };
+          var callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+          if (callNow) func.apply(context, args);
+        };
+      }
+
+      // 撰寫回到頁頂的jQuery語法，語法很簡單，告訴它當這個按鈕被點擊的時候幫我回到網頁頂端
+      $(".gotop").click(function () {
+        $("html,body").animate({
+          "scrollTop": "0"
+        })
+        n = 1
+        /*需留意這裡有一個n=1的指令，之所以要有這個指令是因為在前一堂課中 8-2 所使用的mousewheel功能，
+          如果網友已經看到最後一頁，按回到頁頂的按鈕，這時候畫面會跳到第一頁，
+          但是如果沒有更新讓n=1，這時候網友如果滾動滑鼠的話，會直接跳到最後一頁。
+        */
+      })
+
+      // 當網友離開第一頁後才產生gotop按鈕
+      // 最後一步，我們希望當網友離開第一頁到達第二頁後gotop按鈕才顯示出來，寫法像這樣子：
+      $(".gotop").fadeOut(0)
+      $(window).scroll(function () {
+        if ($(window).scrollTop() >= $(".p02").offset().top) {
+          $(".gotop").fadeIn()
+        } else {
+          $(".gotop").fadeOut()
+        }
+      })
+
+      /*
+      這裡比較要注意的地方是，
+      最上面有一行$(".gotop").fadeOut(0)，這個的用意是在一開始進入網頁的時候不要出現gotop按鈕，
+      fadeOut裡面的0是duration，設成0是因為一進來就不要看到。
+
+      if的指令裡面用 >= $(".p02").offset().top，意思是如果現在捲軸的位置 大於等於 第二頁的話，再出現（fadeIn），
+      否則不要出現（fadeOut），在一般的情況下，我們也可以設成「if($(window).scrollTop()>0)」就可以了。
+      */
+
+    });
+  </script>
+</body>
+
+</html>
